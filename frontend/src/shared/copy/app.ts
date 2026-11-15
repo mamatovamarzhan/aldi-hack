@@ -109,5 +109,6 @@ export const appCopy = {
     visualMannequin: 'Фигура, выполняющая упражнение',
     min: (sec: number) => `${Math.max(1, Math.round(sec / 60))} мин`,
   },
+  theme: { toNight: 'Включить ночную тему', toDay: 'Включить дневную тему' },
   common: { retry: 'Повторить', loadFailed: 'Не получилось загрузить. Проверьте связь и попробуйте ещё раз.' },
 } as const;

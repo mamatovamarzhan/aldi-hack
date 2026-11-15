@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { hourAt, parseOverride, phaseAt, type TimeOverride } from './time';
 import type { Phase } from '../patient/effects';
+import { readTheme } from './theme';
 
 function initialPhase(): Phase {
   let override: TimeOverride | undefined = parseOverride(window.location.search);
   if (!override) {
     try { const saved = sessionStorage.getItem('aldi-sky-time'); if (saved) override = JSON.parse(saved) as TimeOverride; } catch { /* ignore */ }
   }
+  const chosen = readTheme();
+  if (!override && chosen) override = { time: chosen };
   return phaseAt(hourAt(override, 0, new Date()));
 }
 

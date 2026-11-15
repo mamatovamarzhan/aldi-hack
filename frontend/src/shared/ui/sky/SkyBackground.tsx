@@ -1,6 +1,7 @@
 import { ClientOnly } from '@tanstack/react-router';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { parseOverride, type TimeOverride } from './time';
+import { onThemeChange, readTheme } from './theme';
 
 const SkyScene = lazy(() => import('./SkyScene'));
 export type SkyVariant = "full" | "call" | "veil";
@@ -26,6 +27,12 @@ export function SkyBackground({ variant = "full" }: { variant?: SkyVariant }) {
         setOverride(valid);
       }
     } catch { setOverride(query); }
+    // The patient's day/night choice applies when no demo time is set; the toggle switches it live.
+    const chosen = readTheme();
+    let demo = Boolean(query);
+    try { demo = demo || sessionStorage.getItem('aldi-sky-time') !== null; } catch { /* ignore */ }
+    if (chosen && !demo) setOverride({ time: chosen });
+    const offTheme = onThemeChange(choice => setOverride({ time: choice }));
     setConfigured(true);
     let inView = true;
     const syncVisibility = () => setPaused(document.hidden || !inView);
@@ -35,7 +42,7 @@ export function SkyBackground({ variant = "full" }: { variant?: SkyVariant }) {
     if (patient) observer.observe(patient);
     motion.addEventListener('change', syncMotion);
     document.addEventListener('visibilitychange', syncVisibility);
-    return () => { observer.disconnect(); motion.removeEventListener('change', syncMotion); document.removeEventListener('visibilitychange', syncVisibility); };
+    return () => { offTheme(); observer.disconnect(); motion.removeEventListener('change', syncMotion); document.removeEventListener('visibilitychange', syncVisibility); };
   }, []);
   return (
     <div ref={root} aria-hidden="true" className="sky-scene" data-scene-ready={ready ? 'true' : undefined} data-sky-motion={reduced ? 'still' : paused ? 'paused' : 'live'}>

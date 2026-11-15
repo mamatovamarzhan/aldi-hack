@@ -431,7 +431,8 @@
   font-size: 12px; line-height: 15px; font-weight: 700; text-align: center;
   color: var(--text-muted);
 }
-.patient-nav-tab[data-active] { color: var(--action-text); background: var(--primary-tint); }
+/* Tint from the action colour itself, so the active tab stays readable on both the day and the night sky. */
+.patient-nav-tab[data-active] { color: var(--action-text); background: color-mix(in oklab, var(--action-text) 16%, transparent); }
 .patient-nav-tab:focus-visible { outline: 2px solid var(--action-text); outline-offset: 2px; }
 
 .chat-bubble { max-width: 88%; padding: 12px 16px; border-radius: 20px; font-size: 18px; line-height: 27px; color: var(--foreground); }
@@ -449,3 +450,17 @@
 .exercise-progress-fill { height: 100%; background: var(--action-text); transition: width .1s linear; }
 @media (prefers-reduced-motion: reduce) { .exercise-progress-fill { transition: none; } }
 @media print { .patient-nav { display: none; } .theme-patient[data-nav] { padding-bottom: 0; } }
+
+/* Day / night switch: top right of every patient screen, above the sky and the reading veil. */
+.theme-toggle {
+  position: fixed; z-index: 45;
+  top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px));
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 9999px;
+  color: var(--action-text);
+  background: var(--glass-refraction), var(--glass-background);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight);
+}
+.theme-toggle:focus-visible { outline: 2px solid var(--action-text); outline-offset: 2px; }
+@media print { .theme-toggle { display: none; } }
