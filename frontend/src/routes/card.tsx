@@ -5,8 +5,11 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { copy } from "@/shared/copy/patient";
-import { FIELDS, displayValue, doctorPhrase, editField, markSent, MISSING, type Card, type FieldId } from "@/features/session/card";
+import { authCopy } from "@/shared/copy/auth";
+import { FIELDS, displayValue, doctorPhrase, MISSING, type Card, type FieldId } from "@/features/session/card";
+import { fetchCard, removeIntake, saveField, sendToDoctor } from "@/features/session/remote";
 import { clearCard, loadCard, saveCard } from "@/features/session/storage";
+import { useRequireRole } from "@/features/auth/session";
 import { DeleteSheet } from "@/shared/ui/patient/DeleteSheet";
 import { SparkPrimary } from "@/shared/ui/patient/PrimaryAction";
 import { UrgentBanner } from "@/shared/ui/patient/UrgentBanner";
@@ -29,7 +32,9 @@ export const Route = createFileRoute("/card")({
 
 function CardScreen() {
   const navigate = useNavigate();
+  const me = useRequireRole("PATIENT");
   const [card, setCard] = useState<Card | null>(null);
+  const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState<FieldId | null>(null);
   const [draft, setDraft] = useState("");
   const [showTranscript, setShowTranscript] = useState(false);
@@ -37,30 +42,53 @@ function CardScreen() {
 
   useEffect(() => {
     const saved = loadCard();
-    if (!saved) { void navigate({ to: "/", replace: true }); return; }
+    if (!saved?.intakeId) { clearCard(); void navigate({ to: "/", replace: true }); return; }
     setCard(saved);
+    // The browser copy is only a cache: the server holds the real card.
+    fetchCard(saved.intakeId, saved.source)
+      .then(fresh => { setCard(fresh); saveCard(fresh); })
+      .catch(() => { clearCard(); void navigate({ to: "/", replace: true }); });
   }, [navigate]);
 
-  if (!card) return null;
+  if (!card || !me) return null;
 
   const update = (next: Card) => { setCard(next); saveCard(next); };
   const startEdit = (id: FieldId) => { setEditing(id); setDraft(card.fields[id].value ?? ""); };
-  const commit = () => { if (editing) update(editField(card, editing, draft)); setEditing(null); };
+  const commit = () => {
+    const id = editing;
+    setEditing(null);
+    if (!id || (card.fields[id].value ?? "") === draft.trim()) return;
+    saveField(card, id, draft).then(update).catch(() => toast(authCopy.saveFailed));
+  };
   const phrase = doctorPhrase(card);
 
   const copyPhrase = async () => {
     try { await navigator.clipboard.writeText(phrase); toast(copy.card.copied); } catch { /* clipboard unavailable */ }
   };
-  const send = () => {
-    update(markSent(card));
-    toast(copy.card.sent);
-    setTimeout(() => void navigate({ to: "/done" }), ROUTE_DELAY_MS);
+  const doctor = me.doctors?.[0];
+  const send = async () => {
+    if (!doctor) { toast(authCopy.noDoctor); return; }
+    setBusy(true);
+    try {
+      update(await sendToDoctor(card, doctor.id));
+      toast(copy.card.sent);
+      setTimeout(() => void navigate({ to: "/done" }), ROUTE_DELAY_MS);
+    } catch {
+      toast(authCopy.saveFailed);
+      setBusy(false);
+    }
   };
-  const remove = () => {
-    clearCard();
-    setConfirmDelete(false);
-    toast(copy.deleteSheet.deleted);
-    void navigate({ to: "/" });
+  const remove = async () => {
+    try {
+      await removeIntake(card);
+      clearCard();
+      setConfirmDelete(false);
+      toast(copy.deleteSheet.deleted);
+      void navigate({ to: "/" });
+    } catch {
+      setConfirmDelete(false);
+      toast(authCopy.saveFailed);
+    }
   };
 
   return (
@@ -112,7 +140,7 @@ function CardScreen() {
       {showTranscript && <p className="card-patient w-full whitespace-pre-wrap p-5 text-quote">{card.transcript || MISSING}</p>}
 
       <div className="no-print flex w-full flex-col items-center gap-3">
-        <SparkPrimary caption={copy.card.sendCaption} onClick={send}>{copy.card.send}</SparkPrimary>
+        <SparkPrimary disabled={busy || card.sentAt !== null} caption={card.sentAt ? copy.card.sent : doctor ? `${copy.card.sendCaption}: ${doctor.displayName}` : copy.card.sendCaption} onClick={() => void send()}>{copy.card.send}</SparkPrimary>
         <div className="glass-label w-full p-0">
           <Button variant="patientGhost" size="patient" className="w-full" onClick={() => window.print()}>{copy.card.savePdf}</Button>
         </div>
@@ -121,7 +149,7 @@ function CardScreen() {
         </div>
       </div>
 
-      <DeleteSheet open={confirmDelete} onConfirm={remove} onClose={() => setConfirmDelete(false)} />
+      <DeleteSheet open={confirmDelete} onConfirm={() => void remove()} onClose={() => setConfirmDelete(false)} />
     </>
   );
 }

@@ -15,4 +15,16 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Local development only.
+  vite: {
+    server: {
+      proxy: {
+        // /api goes to the backend on the same origin, so the session cookie is first-party.
+        "/api": { target: process.env["API_PROXY"] ?? "http://localhost:3000", changeOrigin: false },
+        // Images that Lovable hosts for this project (sky clouds, orb texture) exist only on the
+        // published app; without this the patient sky fails to load outside Lovable.
+        "/__l5e": { target: process.env["LOVABLE_ASSETS"] ?? "https://design-continuation-studio.lovable.app", changeOrigin: true },
+      },
+    },
+  },
 });

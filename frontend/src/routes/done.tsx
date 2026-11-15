@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { copy } from "@/shared/copy/patient";
 import { loadCard } from "@/features/session/storage";
+import { useRequireRole } from "@/features/auth/session";
 
 export const Route = createFileRoute("/done")({
   head: () => ({
@@ -22,12 +23,13 @@ export const Route = createFileRoute("/done")({
 
 function DoneScreen() {
   const navigate = useNavigate();
+  const me = useRequireRole("PATIENT");
   const [ready, setReady] = useState(false);
   useEffect(() => {
     if (!loadCard()) { void navigate({ to: "/", replace: true }); return; }
     setReady(true);
   }, [navigate]);
-  if (!ready) return null;
+  if (!ready || !me) return null;
 
   return (
     <>

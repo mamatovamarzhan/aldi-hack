@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CallRouteImport } from './routes/call'
 import { Route as CardRouteImport } from './routes/card'
+import { Route as DoctorRouteImport } from './routes/doctor'
 import { Route as DoneRouteImport } from './routes/done'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as TextRouteImport } from './routes/text'
 
@@ -31,9 +33,19 @@ const CardRoute = CardRouteImport.update({
   path: '/card',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DoctorRoute = DoctorRouteImport.update({
+  id: '/doctor',
+  path: '/doctor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DoneRoute = DoneRouteImport.update({
   id: '/done',
   path: '/done',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StyleguideRoute = StyleguideRouteImport.update({
@@ -51,7 +63,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/call': typeof CallRoute
   '/card': typeof CardRoute
+  '/doctor': typeof DoctorRoute
   '/done': typeof DoneRoute
+  '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/text': typeof TextRoute
 }
@@ -59,7 +73,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/call': typeof CallRoute
   '/card': typeof CardRoute
+  '/doctor': typeof DoctorRoute
   '/done': typeof DoneRoute
+  '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/text': typeof TextRoute
 }
@@ -68,23 +84,52 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/call': typeof CallRoute
   '/card': typeof CardRoute
+  '/doctor': typeof DoctorRoute
   '/done': typeof DoneRoute
+  '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/text': typeof TextRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/call' | '/card' | '/done' | '/styleguide' | '/text'
+  fullPaths:
+    | '/'
+    | '/call'
+    | '/card'
+    | '/doctor'
+    | '/done'
+    | '/login'
+    | '/styleguide'
+    | '/text'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/call' | '/card' | '/done' | '/styleguide' | '/text'
-  id: '__root__' | '/' | '/call' | '/card' | '/done' | '/styleguide' | '/text'
+  to:
+    | '/'
+    | '/call'
+    | '/card'
+    | '/doctor'
+    | '/done'
+    | '/login'
+    | '/styleguide'
+    | '/text'
+  id:
+    | '__root__'
+    | '/'
+    | '/call'
+    | '/card'
+    | '/doctor'
+    | '/done'
+    | '/login'
+    | '/styleguide'
+    | '/text'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CallRoute: typeof CallRoute
   CardRoute: typeof CardRoute
+  DoctorRoute: typeof DoctorRoute
   DoneRoute: typeof DoneRoute
+  LoginRoute: typeof LoginRoute
   StyleguideRoute: typeof StyleguideRoute
   TextRoute: typeof TextRoute
 }
@@ -112,11 +157,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/doctor': {
+      id: '/doctor'
+      path: '/doctor'
+      fullPath: '/doctor'
+      preLoaderRoute: typeof DoctorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/done': {
       id: '/done'
       path: '/done'
       fullPath: '/done'
       preLoaderRoute: typeof DoneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/styleguide': {
@@ -140,7 +199,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CallRoute: CallRoute,
   CardRoute: CardRoute,
+  DoctorRoute: DoctorRoute,
   DoneRoute: DoneRoute,
+  LoginRoute: LoginRoute,
   StyleguideRoute: StyleguideRoute,
   TextRoute: TextRoute,
 }

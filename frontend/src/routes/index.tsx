@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { copy } from "@/shared/copy/patient";
+import { authCopy } from "@/shared/copy/auth";
+import { logout, useRequireRole } from "@/features/auth/session";
 import { readClinic } from "@/features/session/storage";
 import { requestMic } from "@/features/voice/mic";
 import { AldiOrb } from "@/shared/ui/sky/AldiOrb";
@@ -33,6 +35,7 @@ const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 function StartScreen() {
   const navigate = useNavigate();
+  const me = useRequireRole("PATIENT");
   const consentId = useId();
   const helperId = useId();
   const [agreed, setAgreed] = useState(false);
@@ -45,6 +48,8 @@ function StartScreen() {
     if (!mic) { toast(copy.start.micUnavailable); return; }
     void navigate({ to: "/call" });
   };
+
+  if (!me) return null;
 
   return (
     <>
@@ -69,6 +74,7 @@ function StartScreen() {
       </div>
 
       <p className="caption mt-4">{copy.start.footer}</p>
+      <button type="button" className="caption underline" onClick={() => void logout().then(() => navigate({ to: "/login" }))}>{authCopy.logout}</button>
     </>
   );
 }
