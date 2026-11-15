@@ -10,17 +10,26 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as CallRouteImport } from './routes/call'
 import { Route as CardRouteImport } from './routes/card'
 import { Route as DoctorRouteImport } from './routes/doctor'
 import { Route as DoneRouteImport } from './routes/done'
+import { Route as InviteRouteImport } from './routes/invite'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as TextRouteImport } from './routes/text'
+import { Route as ExercisesIndexRouteImport } from './routes/exercises.index'
+import { Route as ExercisesIdRouteImport } from './routes/exercises.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CallRoute = CallRouteImport.update({
@@ -43,6 +52,11 @@ const DoneRoute = DoneRouteImport.update({
   path: '/done',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InviteRoute = InviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -58,80 +72,118 @@ const TextRoute = TextRouteImport.update({
   path: '/text',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExercisesIndexRoute = ExercisesIndexRouteImport.update({
+  id: '/exercises/',
+  path: '/exercises/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExercisesIdRoute = ExercisesIdRouteImport.update({
+  id: '/exercises/$id',
+  path: '/exercises/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
   '/call': typeof CallRoute
   '/card': typeof CardRoute
   '/doctor': typeof DoctorRoute
   '/done': typeof DoneRoute
+  '/invite': typeof InviteRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/text': typeof TextRoute
+  '/exercises/$id': typeof ExercisesIdRoute
+  '/exercises/': typeof ExercisesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
   '/call': typeof CallRoute
   '/card': typeof CardRoute
   '/doctor': typeof DoctorRoute
   '/done': typeof DoneRoute
+  '/invite': typeof InviteRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/text': typeof TextRoute
+  '/exercises/$id': typeof ExercisesIdRoute
+  '/exercises': typeof ExercisesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
   '/call': typeof CallRoute
   '/card': typeof CardRoute
   '/doctor': typeof DoctorRoute
   '/done': typeof DoneRoute
+  '/invite': typeof InviteRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/text': typeof TextRoute
+  '/exercises/$id': typeof ExercisesIdRoute
+  '/exercises/': typeof ExercisesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assistant'
     | '/call'
     | '/card'
     | '/doctor'
     | '/done'
+    | '/invite'
     | '/login'
     | '/styleguide'
     | '/text'
+    | '/exercises/$id'
+    | '/exercises/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/assistant'
     | '/call'
     | '/card'
     | '/doctor'
     | '/done'
+    | '/invite'
     | '/login'
     | '/styleguide'
     | '/text'
+    | '/exercises/$id'
+    | '/exercises'
   id:
     | '__root__'
     | '/'
+    | '/assistant'
     | '/call'
     | '/card'
     | '/doctor'
     | '/done'
+    | '/invite'
     | '/login'
     | '/styleguide'
     | '/text'
+    | '/exercises/$id'
+    | '/exercises/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssistantRoute: typeof AssistantRoute
   CallRoute: typeof CallRoute
   CardRoute: typeof CardRoute
   DoctorRoute: typeof DoctorRoute
   DoneRoute: typeof DoneRoute
+  InviteRoute: typeof InviteRoute
   LoginRoute: typeof LoginRoute
   StyleguideRoute: typeof StyleguideRoute
   TextRoute: typeof TextRoute
+  ExercisesIdRoute: typeof ExercisesIdRoute
+  ExercisesIndexRoute: typeof ExercisesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/call': {
@@ -171,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoneRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invite': {
+      id: '/invite'
+      path: '/invite'
+      fullPath: '/invite'
+      preLoaderRoute: typeof InviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -192,18 +258,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TextRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/exercises/': {
+      id: '/exercises/'
+      path: '/exercises'
+      fullPath: '/exercises/'
+      preLoaderRoute: typeof ExercisesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exercises/$id': {
+      id: '/exercises/$id'
+      path: '/exercises/$id'
+      fullPath: '/exercises/$id'
+      preLoaderRoute: typeof ExercisesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssistantRoute: AssistantRoute,
   CallRoute: CallRoute,
   CardRoute: CardRoute,
   DoctorRoute: DoctorRoute,
   DoneRoute: DoneRoute,
+  InviteRoute: InviteRoute,
   LoginRoute: LoginRoute,
   StyleguideRoute: StyleguideRoute,
   TextRoute: TextRoute,
+  ExercisesIdRoute: ExercisesIdRoute,
+  ExercisesIndexRoute: ExercisesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

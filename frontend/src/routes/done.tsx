@@ -17,7 +17,7 @@ export const Route = createFileRoute("/done")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  staticData: { patient: "veil" },
+  staticData: { patient: "veil", nav: true },
   component: DoneScreen,
 });
 

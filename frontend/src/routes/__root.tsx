@@ -129,12 +129,13 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const patient = useMatches({ select: matches => [...matches].reverse().find(m => m.staticData.patient)?.staticData.patient });
+  const screen = useMatches({ select: matches => [...matches].reverse().find(m => m.staticData.patient)?.staticData });
+  const patient = screen?.patient;
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      {patient ? <PatientShell variant={patient}><Outlet /></PatientShell> : <Outlet />}
+      {patient ? <PatientShell variant={patient} nav={screen?.nav === true}><Outlet /></PatientShell> : <Outlet />}
       <Toaster position="top-center" />
     </QueryClientProvider>
   );
