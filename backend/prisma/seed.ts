@@ -1,5 +1,6 @@
 import { PrismaClient, type Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { readFileSync } from "node:fs";
 
 // Демоданные. Все люди, клиники и жалобы вымышлены.
 const db = new PrismaClient();
@@ -73,29 +74,31 @@ async function main() {
     await db.share.create({ data: { intakeId: intake.id, cardVersion: 1, doctorId: doctor.id, notification: "SKIPPED" } });
   }
 
-  // Упражнения. Тексты — демонстрационные заглушки (reviewed: false), а не медицинская рекомендация.
-  // Настоящие упражнения, инструкции и тайминги дыхания выбирает и проверяет специалист.
-  await db.exercise.upsert({
-    where: { id: "breathing" }, update: {},
-    create: { id: "breathing", modelUrl: "/models/breathing.glb", animationName: "Breathing", durationSec: 40, sortOrder: 1, published: true },
-  });
-  await db.exercise.upsert({
-    where: { id: "exercise-2" }, update: {},
-    create: { id: "exercise-2", modelUrl: null, animationName: null, durationSec: 60, sortOrder: 2, published: true },
-  });
-  const cues = (inhale: string, exhale: string) =>
-    [0, 10, 20, 30].flatMap((t) => [{ atSec: t, text: inhale }, { atSec: t + 4, text: exhale }]);
-  const translations = [
-    { exerciseId: "breathing", locale: "ru", title: "Спокойное дыхание", description: "Демонстрация: движение и дыхание в спокойном темпе.", instructions: ["Сядьте или лягте удобно.", "Дышите в спокойном темпе, следуя подсказкам на экране."], breathingCues: cues("Вдох", "Выдох") },
-    { exerciseId: "breathing", locale: "en", title: "Calm breathing", description: "Demonstration: movement and breathing at a calm pace.", instructions: ["Sit or lie down comfortably.", "Breathe at a calm pace, following the cues on the screen."], breathingCues: cues("Breathe in", "Breathe out") },
-    { exerciseId: "exercise-2", locale: "ru", title: "Упражнение 2", description: "Готовится. 3D-модели пока нет.", instructions: [], breathingCues: [] },
-  ];
-  for (const t of translations) {
-    await db.exerciseTranslation.upsert({
-      where: { exerciseId_locale: { exerciseId: t.exerciseId, locale: t.locale } },
-      update: {},
-      create: { ...t, reviewed: false, published: true },
-    });
+  // Упражнения: каталог ответственного за 3D (prisma/exercises.json, копия из его репозитория).
+  // Тексты не редактируем, казахский написан носителем. Все упражнения пока reviewed: false —
+  // это демонстрация, а не проверенная специалистом рекомендация.
+  type CatalogExercise = {
+    id: string; visual: string; locked: boolean; reviewed: boolean; durationSec: number;
+    content: Record<string, { title: string; description: string; steps: string[]; cues: unknown[]; machineTranslated: boolean; unlockNote?: string }>;
+  };
+  const catalog: CatalogExercise[] = JSON.parse(readFileSync(new URL("./exercises.json", import.meta.url), "utf8"));
+  await db.exercise.deleteMany({ where: { id: { notIn: catalog.map((e) => e.id) } } });
+  for (const [i, e] of catalog.entries()) {
+    const base = { visual: e.visual, locked: e.locked, durationSec: e.durationSec, sortOrder: i + 1, published: true };
+    await db.exercise.upsert({ where: { id: e.id }, update: base, create: { id: e.id, ...base } });
+    for (const [locale, c] of Object.entries(e.content)) {
+      const text = {
+        title: c.title, description: c.description,
+        instructions: c.steps, breathingCues: c.cues as Prisma.InputJsonValue,
+        machineTranslated: c.machineTranslated, unlockNote: c.unlockNote ?? null,
+        reviewed: e.reviewed, published: true,
+      };
+      await db.exerciseTranslation.upsert({
+        where: { exerciseId_locale: { exerciseId: e.id, locale } },
+        update: text,
+        create: { exerciseId: e.id, locale, ...text },
+      });
+    }
   }
 
   console.log(`Готово. Логины: admin.demo, doctor.demo, doctor2.demo (другая клиника), mama.demo. Пароль: ${password}`);

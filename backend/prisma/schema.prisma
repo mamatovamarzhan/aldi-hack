@@ -214,8 +214,10 @@ model Share {
 // ---------- Упражнения ----------
 
 model Exercise {
-  id            String                @id // короткое имя, например "breathing"
-  modelUrl      String?
+  id            String                @id // короткое имя, например "pf-slow"
+  visual        String? // процедурная 3D-сцена во фронте: "hammock" | "mannequin"
+  locked        Boolean               @default(false)
+  modelUrl      String? // файл модели, если сцена не процедурная
   animationName String?
   durationSec   Int
   sortOrder     Int                   @default(0)
@@ -231,7 +233,9 @@ model ExerciseTranslation {
   title             String
   description       String
   instructions      Json // string[]
-  breathingCues     Json // { atSec: number, text: string }[]
+  breathingCues     Json // { atSec: number, phase: string, text: string }[]
+  machineTranslated Boolean  @default(false)
+  unlockNote        String?
   audioUrl          String?
   contraindications String?
   reviewed          Boolean  @default(false)

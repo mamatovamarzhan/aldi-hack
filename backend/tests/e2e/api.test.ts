@@ -381,15 +381,29 @@ describe("голос и инструменты агента", () => {
 });
 
 describe("упражнения", () => {
-  it("каталог на выбранном языке; отсутствующий перевод обозначен явно", async () => {
+  it("каталог из репозитория 3D: сцена, блокировка, шаги и подсказки с фазами", async () => {
     const ru = await mom.get("/api/exercises?locale=ru");
-    expect(ru.data.items.map((e: any) => e.id)).toEqual(["breathing", "exercise-2"]);
-    expect(ru.data.items[0]).toMatchObject({ available: true, has3d: true, title: "Спокойное дыхание", reviewed: false });
-    expect(ru.data.items[1]).toMatchObject({ has3d: false, modelUrl: null });
+    expect(ru.data.items.map((e: any) => [e.id, e.visual, e.locked])).toEqual([
+      ["pf-slow", "hammock", false],
+      ["pelvic-tilt", "mannequin", false],
+      ["bridge", "mannequin", true],
+    ]);
+    const first = ru.data.items[0];
+    expect(first).toMatchObject({ available: true, has3d: true, durationSec: 80, reviewed: false, machineTranslated: true, modelUrl: null });
+    expect(first.steps.length).toBeGreaterThan(0);
+    expect(first.cues[0]).toEqual({ atSec: 0, phase: "inhale", text: "Вдох" });
+    expect(ru.data.items[2].unlockNote).toMatch(/Откроется/);
+  });
 
-    const kk = await mom.get("/api/exercises/breathing?locale=kk");
-    expect(kk.data).toMatchObject({ available: false, title: null, instructions: [], availableLocales: ["en", "ru"] });
-    expect(kk.data.modelUrl).toBe("/models/breathing.glb");
+  it("тексты отдаются на выбранном языке; казахский не помечен как машинный перевод", async () => {
+    const kk = await mom.get("/api/exercises/pf-slow?locale=kk");
+    const en = await mom.get("/api/exercises/pf-slow?locale=en");
+    expect(kk.data).toMatchObject({ available: true, machineTranslated: false, availableLocales: ["en", "kk", "ru", "uz"] });
+    expect(en.data.machineTranslated).toBe(true);
+    expect(kk.data.title).not.toBe(en.data.title);
+    // Тайминги и фазы одинаковы на всех языках, отличается только текст.
+    const timing = (d: any) => d.cues.map((c: any) => [c.atSec, c.phase]);
+    expect(timing(kk.data)).toEqual(timing(en.data));
   });
 
   it("неподдерживаемый язык и неизвестное упражнение", async () => {

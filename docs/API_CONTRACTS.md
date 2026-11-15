@@ -126,6 +126,8 @@
 
 ## Упражнения
 
+Каталог — три упражнения из репозитория 3D (`moonicer/aldi-exercises`), загружены в базу сидом из `backend/prisma/exercises.json`. 3D-сцены процедурные и рисуются во фронте; файлов моделей нет.
+
 | Метод и путь | Ответ `data` |
 |---|---|
 | `GET /api/exercises?locale=ru` | `{ items: [exercise] }` |
@@ -133,18 +135,26 @@
 
 ```json
 {
-  "id": "breathing", "locale": "ru", "durationSec": 40,
-  "has3d": true, "modelUrl": "/models/breathing.glb", "animationName": "Breathing",
-  "available": true, "availableLocales": ["en", "ru"],
-  "title": "…", "description": "…", "instructions": ["…"],
-  "breathingCues": [{ "atSec": 0, "text": "Вдох" }],
+  "id": "pf-slow", "locale": "ru", "durationSec": 80,
+  "visual": "hammock", "locked": false, "has3d": true,
+  "modelUrl": null, "animationName": null,
+  "available": true, "availableLocales": ["en", "kk", "ru", "uz"],
+  "title": "…", "description": "…", "steps": ["…"],
+  "cues": [{ "atSec": 0, "phase": "inhale", "text": "Вдох" }],
+  "machineTranslated": true, "unlockNote": null,
   "audioUrl": null, "contraindications": null, "reviewed": false
 }
 ```
 
-- `available: false` — инструкции на этом языке нет. Текстовые поля пустые; фронт предлагает выбрать язык из `availableLocales`, а не подставляет его молча.
-- `has3d: false` — модели нет, показывать «3D пока недоступно».
+- `id`: `pf-slow`, `pelvic-tilt`, `bridge`.
+- `visual`: какую сцену рисует плеер — `hammock` или `mannequin`.
+- `locked: true` — упражнение закрыто; `unlockNote` объясняет, как его открыть.
+- `cues`: подсказки дыхания. `phase`: `inhale | squeeze | hold | release | rest`. Время и фазы одинаковы на всех языках, отличается только `text`.
+- `machineTranslated: true` — черновик машинного перевода (ru, en, uz); казахский написан носителем.
 - `reviewed: false` — демонстрационный пример, не проверенный специалистом; показывать с этой пометкой.
+- `available: false` — текста на этом языке нет. Текстовые поля пустые; фронт предлагает язык из `availableLocales`, а не подставляет его молча.
+
+Поля `steps`, `cues`, `machineTranslated`, `unlockNote`, `visual`, `locked`, `durationSec` называются так же, как в `entities/exercise/types.ts` плеера. Чтобы плеер брал данные с сервера, вместо чтения `exercises.json` ему нужен запрос `GET /api/exercises/:id?locale=…`.
 
 ## Инструменты голосового агента
 
