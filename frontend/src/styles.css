@@ -1,0 +1,412 @@
+/*
+ * Tailwind v4 entry: config lives here, with no tailwind.config.js or PostCSS plugin.
+ * - Keep every @import in this top block, above @theme and the rest of the file. Install an
+ *   npm package before @importing its CSS. Never @import a remote URL (web fonts, CDN CSS): the
+ *   build resolves @import from the filesystem. Load those with a <link> in the head() of
+ *   src/routes/__root.tsx and name the family in a --font-* token in @theme inline below.
+ */
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The design lives in this file: oklch color tokens on the shadcn variables
+ * (--background, --foreground, --primary, --secondary, --muted, --accent, ...) plus
+ * new tokens as needed, font tokens, and custom styles and animations.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+
+@theme inline {
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-clinical: "IBM Plex Sans", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --font-supportive: "Cormorant Garamond", serif;
+  --color-panel: var(--panel);
+  --color-surface: var(--surface);
+  --color-primary-pressed: var(--primary-pressed);
+  --color-primary-tint: var(--primary-tint);
+  --color-lilac-mist: var(--lilac-mist);
+  --color-sky-light: var(--sky-light);
+  --color-sky-mid: var(--sky-mid);
+  --color-sky-deep: var(--sky-deep);
+  --color-meadow-light: var(--meadow-light);
+  --color-sage: var(--sage);
+  --color-meadow: var(--meadow);
+  --color-meadow-deep: var(--meadow-deep);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-success: var(--success);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-quote: var(--quote);
+  --color-missing: var(--missing);
+  --color-uncertain: var(--uncertain);
+  --color-uncertain-foreground: var(--uncertain-foreground);
+  --shadow-card: 0 12px 32px rgba(90, 70, 150, 0.16);
+  --radius-card: 20px;
+  --radius-sheet: 28px;
+}
+
+/* ---------- PATIENT: calm light room, ivory + lavender ---------- */
+:root, .theme-patient {
+  --sky-fallback: linear-gradient(180deg, oklch(0.65 0.13 243), var(--sky-light) 65%, var(--lilac-mist));
+  --sky-reading-veil: oklch(0.981 0.007 95 / 75%);
+  --radius: 1.25rem;
+  --background: oklch(0.981 0.007 95); /* #FBF9F4 */
+  --foreground: oklch(0.242 0.038 295); /* #2A2438 */
+  --card: oklch(1 0 0); /* #FFFFFF */
+  --card-foreground: oklch(0.242 0.038 295);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.242 0.038 295);
+  --primary: #2EA8FF;
+  --primary-foreground: oklch(1 0 0);
+  --primary-pressed: #1565D8;
+  --action-text: #0757A6;
+  --ghost-text: #5B4A9E;
+  --supportive-text: #1B2A5C;
+  --glass-background: rgba(255,255,255,.68);
+  --glass-border: oklch(1 0 0 / 65%);
+  --glass-highlight: oklch(1 0 0 / 90%);
+  --glass-refraction: linear-gradient(135deg, oklch(1 0 0 / 14%), oklch(0.889 0.045 236 / 4%) 45%, oklch(0.879 0.052 300 / 13%));
+  --action-glow: 0 10px 30px rgba(30,120,240,.45);
+  --action-shimmer: linear-gradient(110deg, transparent 25%, oklch(1 0 0 / 32%) 50%, transparent 75%);
+  --title-glow: rgba(255,255,255,.55);
+  --sheet-scrim: oklch(0.242 0.038 295 / 35%);
+  --orb-halo: 0 0 35px 12px oklch(0.94 0.06 87 / 35%), 0 0 85px 25px oklch(0.85 0.04 87 / 18%);
+  --sky-speaking: oklch(0.95 0.03 270 / 12%);
+  --chip-foreground: #2A2438;
+  --primary-tint: oklch(0.936 0.028 301.7); /* #EDE6FA */
+  --lilac-mist: oklch(0.879 0.052 300.1); /* #DCD0F5 */
+  --sky-light: oklch(0.889 0.045 236); /* #BFE0F5 */
+  --sky-mid: oklch(0.798 0.076 236.9); /* #8EC5E8 */
+  --sky-deep: oklch(0.507 0.096 244.9); /* #2F6A98 — only blue allowed for text/links */
+  --meadow-light: oklch(0.903 0.035 150.5); /* #CFE6D3 */
+  --sage: oklch(0.810 0.052 151.2); /* #A9CBB0 */
+  --meadow: oklch(0.759 0.075 152.4); /* #8DBF9A */
+  --meadow-deep: oklch(0.524 0.090 163.1); /* #2F7A5B */
+  --panel: oklch(0.946 0.017 290); /* #F3EFFA */
+  --surface: oklch(1 0 0); /* #FFFFFF */
+  --secondary: oklch(1 0 0);
+  --secondary-foreground: oklch(0.562 0.128 294);
+  --muted: oklch(0.946 0.017 290);
+  --muted-foreground: oklch(0.508 0.028 290); /* #6E6880 */
+  --accent: oklch(0.936 0.028 301.7);
+  --accent-foreground: oklch(0.242 0.038 295);
+  --destructive: oklch(0.527 0.19 25); /* #C9393F */
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.918 0.014 290); /* #E7E2F0 */
+  --input: oklch(0.918 0.014 290);
+  --ring: oklch(0.562 0.128 294 / 40%);
+  --text-muted: #51495F;
+  --text-faint: #51495F;
+  --success: oklch(0.524 0.090 163.1); /* #2F7A5B */
+  --warn: oklch(0.623 0.118 85); /* #B8860B */
+  --danger: oklch(0.527 0.19 25); /* #C9393F */
+  --danger-bg: oklch(0.953 0.02 20); /* #FDECEC */
+  --quote: oklch(0.242 0.038 295);
+  --missing: #51495F;
+  --uncertain: oklch(0.623 0.118 85);
+  --uncertain-foreground: oklch(0.35 0.06 85);
+  /* Sphere: lilac → sky blue with a faint warm highlight, like a sun behind haze */
+  --sphere: radial-gradient(circle at 36% 30%, oklch(0.97 0.03 90 / 0.95), oklch(0.828 0.061 297.8) 42%, oklch(0.798 0.076 236.9) 70%, oklch(0.798 0.076 236.9 / 0) 78%);
+  font-family: var(--font-sans);
+}
+
+/* Reading screens keep the 75% ivory veil, so they stay on day text/glass tokens at night. */
+.theme-patient[data-sky-phase="night"]:not([data-reading]) {
+  --title-glow: rgba(10,14,40,.45);
+  --glass-background: rgba(16,20,52,.58);
+  --glass-border: oklch(0.85 0.04 295 / 35%);
+  --glass-highlight: oklch(0.94 0.025 285 / 45%);
+  --glass-refraction: linear-gradient(135deg, oklch(0.75 0.07 295 / 10%), transparent 45%, oklch(0.8 0.07 220 / 7%));
+  --foreground: #F3F1FF;
+  --card-foreground: #F3F1FF;
+  --text-muted: #E1DCEC;
+  --text-faint: #E1DCEC;
+  --muted-foreground: #E1DCEC;
+  --missing: #E1DCEC;
+  --quote: #F3F1FF;
+  --ghost-text: #D9CCFF;
+  --action-text: #A4DAFF;
+  --supportive-text: #F3F1FF;
+  --uncertain-foreground: #F7D78C;
+  --orb-halo: 0 0 40px 15px oklch(0.88 0.04 290 / 30%), 0 0 90px 28px oklch(0.74 0.08 290 / 20%);
+}
+.theme-patient[data-sky-phase="sunset"] { --glass-refraction: linear-gradient(135deg, oklch(0.9 0.06 45 / 13%), transparent 45%, oklch(0.8 0.06 295 / 10%)); }
+
+/* ---------- DOCTOR: clinical, dense, A4 ---------- */
+.theme-doctor {
+  --radius: 0.125rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.15 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0 0);
+  --primary: oklch(0.15 0 0);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.96 0.003 250);
+  --secondary-foreground: oklch(0.15 0 0);
+  --muted: oklch(0.97 0.003 250);
+  --muted-foreground: oklch(0.45 0.01 250);
+  --accent: oklch(0.94 0.01 250);
+  --accent-foreground: oklch(0.15 0 0);
+  --destructive: oklch(0.5 0.2 27);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.85 0.005 250);
+  --input: oklch(0.8 0.005 250);
+  --ring: oklch(0.15 0 0);
+  --quote: oklch(0.15 0 0);
+  --missing: oklch(0.5 0.01 250);
+  --uncertain: oklch(0.15 0 0);
+  --uncertain-foreground: oklch(1 0 0);
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-clinical);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 27px;
+    font-weight: 500;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@utility font-clinical { font-family: var(--font-clinical); }
+
+/* Patient layout: centered column, max 480px on desktop */
+@utility container-patient {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Patient buttons: pill, 56px tall, full width on mobile */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  width: 100%;
+  border-radius: 9999px;
+  font-size: 18px;
+  line-height: 27px;
+  font-weight: 700;
+  transition: background-color 150ms ease, color 150ms ease, transform 100ms ease;
+  &:active { transform: scale(0.98); }
+  @media (min-width: 480px) { width: auto; padding-inline: 2.5rem; }
+}
+@utility btn-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(135deg, var(--primary), var(--primary-pressed));
+  color: var(--primary-foreground);
+  font-size: 20px;
+  box-shadow: var(--action-glow);
+  &::before { content: ''; position: absolute; inset: 0; background: var(--action-shimmer); transform: translateX(-150%); animation: action-shimmer 6s ease-in-out infinite; pointer-events: none; }
+  &:active {
+    background: linear-gradient(180deg, var(--primary), var(--primary-pressed));
+    box-shadow: var(--action-glow);
+  }
+}
+@utility btn-secondary {
+  background: var(--glass-refraction), var(--glass-background);
+  backdrop-filter: blur(24px) saturate(160%);
+  color: var(--action-text);
+  border: 1px solid var(--action-text);
+  box-shadow: inset 0 1px 0 var(--glass-highlight);
+  &:active { background: var(--primary-tint); }
+}
+@utility btn-ghost {
+  background: transparent;
+  color: var(--ghost-text);
+  &:active { background: var(--primary-tint); }
+}
+
+/* Patient card: ivory at 88% opacity, 20px radius, lilac shadow, white top highlight */
+@utility card-patient {
+  background: var(--glass-refraction), var(--glass-background);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+/* Bottom sheet: 28px top radius */
+@utility sheet-bottom {
+  background: var(--glass-refraction), var(--glass-background);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-top-left-radius: var(--radius-sheet);
+  border-top-right-radius: var(--radius-sheet);
+  box-shadow: var(--shadow-card), inset 0 1px 0 var(--glass-highlight);
+}
+
+/* Red is used ONLY here: urgent banner + hang-up call button */
+@utility banner-urgent {
+  position: relative;
+  z-index: 2;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-card);
+}
+@utility btn-hangup {
+  background: var(--danger);
+  color: oklch(1 0 0);
+  &:active { background: oklch(0.45 0.17 25); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(0.86); opacity: 0.75; }
+  50% { transform: scale(1); opacity: 1; }
+}
+@utility sphere {
+  background: var(--sphere);
+  border-radius: 9999px;
+  filter: blur(0.5px);
+  animation: breathe 8s ease-in-out infinite;
+  box-shadow: 0 0 80px 10px oklch(0.798 0.076 236.9 / 22%);
+}
+
+/* ---------- Sky backdrop: one fixed layer behind all patient screens ---------- */
+.sky-scene {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--sky-fallback);
+}
+
+/* Isolate the fixed sky from both the page background and the doctor's band. */
+.theme-patient:has(.sky-scene) { isolation: isolate; }
+.sky-scene canvas { display: block; }
+.sky-scene::after { content: ''; position: absolute; inset: 0; background: var(--sky-speaking); opacity: 0; transition: opacity 1s ease; }
+.theme-patient[data-aldi-speaking="true"] .sky-scene::after { opacity: 1; }
+
+.glass-label { background: var(--glass-refraction), var(--glass-background); backdrop-filter: blur(24px) saturate(160%); border: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 var(--glass-highlight); border-radius: 20px; }
+.glass-label { padding: 8px 20px; }
+.aldi-title { position: relative; isolation: isolate; font-family: var(--font-supportive); font-style: italic; font-weight: 600; font-size: 52px; line-height: 1.1; letter-spacing: 0.01em; padding: 0 12px; }
+/* Soft borderless light behind the title for readability on the sky. */
+.aldi-title::before { content: ''; position: absolute; left: 50%; top: 50%; width: 260px; height: 120px; transform: translate(-50%, -50%); z-index: -2; pointer-events: none; background: radial-gradient(ellipse at center, var(--title-glow) 0%, transparent 70%); }
+.aldi-orb { width: 160px; height: 160px; flex-shrink: 0; border-radius: 50%; box-shadow: var(--orb-halo); margin: 8px 0; }
+.aldi-orb-call { width: 180px; height: 180px; }
+.aldi-orb-card { width: 64px; height: 64px; }
+.orb-surface { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: var(--sphere); }
+.orb-loaded { background: transparent; }
+.orb-surface canvas { display: block; }
+/* The Orb disk spans ~91% of its canvas; enlarge and clip so the disk fills the sphere exactly. */
+.orb-canvas { width: 109.6%; height: 109.6%; margin: -4.8%; }
+.supportive-line { font-family: var(--font-supportive); font-size: 28px; font-weight: 500; font-style: italic; line-height: 1.2; color: var(--supportive-text); text-align: center; max-width: 100%; margin: 0 0 8px; }
+.supportive-line span { animation: letter-reveal .5s both; animation-delay: calc(var(--letter-index) * 35ms); }
+.theme-patient[data-sky-phase="night"]:not([data-reading]) .supportive-line { text-shadow: 0 0 18px var(--glass-highlight); }
+.theme-patient .bg-sky-light, .theme-patient .bg-meadow-light, .theme-patient .bg-lilac-mist { color: var(--chip-foreground); }
+/* Caption under a button: 15px, muted, centered, 6px below. */
+.caption { font-size: 15px; line-height: 21px; color: var(--text-muted); text-align: center; margin-top: 6px; width: 100%; }
+.screen-title { font-size: 28px; line-height: 34px; font-weight: 800; color: var(--foreground); }
+.call-status { font-size: 22px; line-height: 30px; font-weight: 700; text-align: center; color: var(--foreground); background: var(--glass-refraction), var(--glass-background); backdrop-filter: blur(24px) saturate(160%); border: 1px solid var(--glass-border); border-radius: var(--radius-card); box-shadow: inset 0 1px 0 var(--glass-highlight); padding: 14px 22px; width: 100%; }
+.back-link { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; font-weight: 700; color: var(--ghost-text); }
+.patient-textarea { color: var(--foreground); font-size: 18px; line-height: 27px; resize: vertical; background-color: var(--surface); outline: none; }
+.patient-textarea:focus-visible { box-shadow: 0 0 0 2px var(--action-text); }
+.example-chip { text-align: left; font-style: italic; color: var(--quote); background: var(--lilac-mist); border-radius: var(--radius-card); padding: 12px 16px; }
+.icon-button { display: inline-grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 9999px; color: var(--action-text); }
+.icon-button:active { background: var(--primary-tint); }
+.consent-check { width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--action-text); background: var(--surface); }
+.consent-check[data-state="checked"] { background: var(--primary-pressed); border-color: var(--primary-pressed); color: var(--primary-foreground); }
+.sheet-scrim { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: var(--sheet-scrim); }
+.sheet-panel { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 16px; padding: 24px 24px 32px; color: var(--foreground); background-color: var(--background); }
+@keyframes action-shimmer { 0%, 70% { transform: translateX(-150%); } 100% { transform: translateX(150%); } }
+@keyframes letter-reveal { from { opacity: 0; filter: blur(5px); } to { opacity: 1; filter: blur(0); } }
+
+/* Text/Card screens: 75% ivory veil, no blur, so text stays easy to read */
+.sky-veil {
+  position: absolute;
+  inset: 0;
+  background: var(--sky-reading-veil);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sphere { animation: none; }
+  .btn-primary::before, .supportive-line span { animation: none; }
+  .sky-scene::after { transition: none; }
+}
+
+@media print {
+  @page { size: A4; margin: 14mm; }
+  .theme-doctor { font-size: 10.5pt; }
+  .no-print { display: none !important; }
+  .theme-patient .sky-scene { display: none; }
+}
+
+/* Patient text follows the current sky phase (night tokens included). */
+.theme-patient { color: var(--foreground); }

@@ -1,0 +1,21 @@
+# Patient sky
+- [x] Replace shader clouds with seven Drei Cloud groups, 0.15-unit rightward wind, time-aware lights/fog and cloud-occluded GodRays; verify desktop/mobile rendering, all time modes, positive live wind displacement and nine tests.
+- [x] Replace cloud lobes with perspective domain-warped 7-octave noise, two wind layers and density-lit edges; replace hard rays with diffuse integrated scattering, preserving everything else.
+- [x] Sky-only fixes: rounded isotropic cumulus with blue gaps; remove separate sun disk, align rays behind orb; restrict warm haze to bottom 20% above hills.
+- [x] Restyle patient panels, buttons, title and supportive line from the living-sky brief, without changing existing copy or doctor screens.
+- [x] Replace the sphere with a lazy R3F audio-reactive orb and prepare its shared transition.
+- [x] Swap the sphere for the ElevenLabs UI Orb (lilac → azure, 160px Start / 180px Call), ready for agentState and call volumes.
+- [ ] Drive the Orb from the ElevenLabs call (agentState + getInputVolume/getOutputVolume) once Start and Call screens and the voice call are approved and built.
+- [ ] Connect voice states and exercise Start→Call→Card transitions after approval to build those screens; those flows do not exist in the current design-system stage.
+- [x] Verify day/night mobile and desktop rendering, reduced motion and existing tests.
+- [x] Replace the patient backdrop with atmospheric WebGL sky, clouds, meadow and night effects.
+- [x] Add local time, session demo overrides, reduced motion and hidden-tab pause.
+- [x] Verify four time-mode screenshots, desktop/mobile, session persistence, existing routing and pure time rules; keep doctor screens and copy unchanged.
+- [ ] Real-device smoothness and orientation need the user's phone; software rendering cannot establish those.
+# Patient screens (final copy)
+- [x] Build Start, Call, Text, Card, Delete sheet and Done screens with the exact final Russian copy; remove demo labels.
+- [x] Title: GradientText (React Bits) replaces ShinyText; no glass box; day/night colors and glow.
+- [x] ClickSpark (React Bits) only on the three primary buttons; replaces ripple; disabled = no sparks; 220 ms route delay; night glow 0.9.
+- [x] Publish the site once the patient screens are built and checked.
+- [ ] Fill card rows from the patient's words (needs AI card building) and connect the ElevenLabs voice agent; until then voice calls end on the error state and text cards start as «Не указано».
+- [ ] Real delivery to the doctor (needs doctor cabinet + backend); «Отправить врачу» currently only marks the card sent in this browser.

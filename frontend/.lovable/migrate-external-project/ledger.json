@@ -1,0 +1,5 @@
+{"source":"code-archive","capabilities":[
+{"capability":"code","source":"Aldi-source-2026-11-15.zip","outcome":"migrate","status":"verified","next_action":"none"},
+{"capability":"schema/records/auth","source":"none (no backend in source)","outcome":"not_applicable","status":"verified","next_action":"none"},
+{"capability":"cloud texture asset","source":"src/assets/aldi-cloud.png.asset.json (old project)","outcome":"rehost","status":"verified","next_action":"none"},
+{"capability":"verification","source":"tests + screenshots","outcome":"verify","status":"verified","next_action":"real-device smoothness still needs the user phone"}]}

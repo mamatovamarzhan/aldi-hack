@@ -1,0 +1,39 @@
+# Aldi — continue from this point
+Snapshot: 15 November 2026, after replacing the clouds with Drei.
+
+## Preserve the project rather than rebuild it
+The source archive contains the current implementation, dependency lockfile, tests, AGENTS.md, roadmap.md and design rules. It is not a full conversation transcript. This project has no connected Lovable Cloud database, user accounts or private API credentials to migrate.
+
+### Best option: retain this existing project
+1. In the old account, invite the new account's email to the workspace as an admin: Workspace settings → People.
+2. Use Project settings → General → Transfer ownership to transfer to the new account.
+3. Billing and credits do not transfer; set those up separately.
+4. Verify the project from the new account before deleting anything in the old account.
+This keeps you working on the existing project rather than recreating it.
+
+### Backup option: import the source archive
+On the new account's dashboard, open the + menu in the prompt box → Import project to Lovable → Upload code, if available. Upload Aldi-source-2026-11-15.zip. This import feature is rolling out and may not be available on every account. Read the continuation prompt below into the new chat after import. Import may perform a migration; compare the result with the original before making changes.
+
+### Another option: remix
+The old account can enable Public remixing in Project settings → General. Open the project link while signed in to the new account and remix. This exposes source code to anyone with access to the remix link, so choose it only if comfortable sharing. Do not assume the old chat history or memory transfers: supply this guide too.
+
+## Paste this into the new Lovable chat
+Continue the imported Aldi project from its existing files. Do not rebuild or redesign it. Read AGENTS.md, roadmap.md, and handover/design-rules.md first. Treat handover/memory-index.md as reference; it points to memory from the original account and those paths may need recreation. Restore the lasting design rules in this project's knowledge/memory.
+
+Aldi is a discreet symptom-to-doctor-card app for women 6 weeks–12 months postpartum. All app UI is Russian, address the user as Вы, and never diagnose. Every future doctor card line must be supported by the patient's own quote. Missing: Не указано; uncertain: ⚠ Проверьте. Every browser title is only Aldi. No medical words in URLs/history. No faces, babies, avatars, body illustrations, stock mother images, kite, uploaded sky pictures or SVG oil-paint filters.
+
+Build in stages and wait for approval: design system → patient screens → doctor cabinet. We are still at the design-system preview stage. Start/Call/Card flows, real voice calling, patient intake and doctor cabinet functionality have NOT been built. Do not invent working voice states or imply that they exist. Keep the doctor style separate: dense black on white and A4 print. The patient side has a living sky, iridescent sphere, glass panels and azure actions. Keep exact existing copy unless asked.
+
+Latest requested implementation: custom fBm cloud rendering was removed. SkyScene uses seven seeded Drei Cloud groups inside Clouds, Lambert material, a project-hosted standard cloud texture, perspective camera fov 50, horizon fog, time-aware lighting and GodRays from a small mesh positioned behind the UI orb. Wind is rightward at 0.15 units/second with offscreen wrap, tested in cloud-motion.test.ts. Preserve the sky gradient, orb, hills, grass, title, supportive quote, buttons, panels and routes unless explicitly requested to change them. Read handover/design-rules.md for exact typography/colors/time rules.
+
+The app uses TanStack Start, React 19, Tailwind v4, R3F, Drei and React Three Postprocessing. It has only the / content route showing the patient design samples and a separate doctor sample band. Browser-only 3D is lazy behind ClientOnly. Theme tokens live in src/shared/ui/theme and src/styles.css. Do not mix the patient/doctor themes.
+
+Checks at handoff: nine tests passed (cloud-motion, time, app-routing), latest build passed, desktop/mobile screenshots rendered, ?time=day/dawn/sunset/night worked, live cloud x positions increased, and night opacity read 0.35. Hardware frame rate/feel, orientation and the aesthetic strength of cloud-occluded rays need real-device checking; do not claim these were verified. Reduced-motion mode required an extra invalidate after cloud texture loads, implemented by CloudReady.
+
+Ask what I want to change next. Do not proceed to patient screens without approval.
+
+## Code / assets
+- The cloud texture is referenced by src/assets/aldi-cloud.png.asset.json through a hosted URL. It must stay reachable; if it fails, rehost the standard Drei cloud texture and update the pointer.
+- Downloaded copies contain no node_modules, repository metadata or build output. Install from package.json/bun.lock in the new environment.
+- src/routeTree.gen.ts is regenerated by the router tooling.
+- This guide is a handoff, not a guarantee that account-level settings or the original conversation are imported with a ZIP.
